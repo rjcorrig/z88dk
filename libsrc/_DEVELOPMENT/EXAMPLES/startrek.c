@@ -19,8 +19,6 @@
  *
  * - K&R 'register' declaration changed to int.
  *
- * - Disable printf converters except %sdf
- *
  * - Used fflush(stdin) to clear input buffers prior to reading stdin
  *   for more comfortable behaviour.
  *
@@ -29,8 +27,6 @@
 
 // zcc +cpm -vn -SO3 -clib=sdcc_iy --max-allocs-per-node200000 --opt-code-size startrek.c -o startrek -lm -create-app
 // zcc +zx -vn -SO3 -startup=4 -clib=sdcc_iy --max-allocs-per-node200000 --opt-code-size startrek.c -o startrek -lm -create-app
-
-#pragma printf = "%s %d %f"
 
 #pragma output CLIB_MALLOC_HEAP_SIZE   = 0            // do not create malloc heap
 #pragma output CLIB_STDIO_HEAP_SIZE    = 0            // do not create stdio heap (cannot open files)
@@ -337,23 +333,23 @@ new_game(void)
       reads(sTemp);
       printf("\n");
 
-      if (! strncmp(sTemp, "nav", 3))
+      if (! strncasecmp(sTemp, "nav", 3))
         course_control();
-      else if (! strncmp(sTemp, "srs", 3))
+      else if (! strncasecmp(sTemp, "srs", 3))
         short_range_scan();
-      else if (! strncmp(sTemp, "lrs", 3))
+      else if (! strncasecmp(sTemp, "lrs", 3))
         long_range_scan();
-      else if (! strncmp(sTemp, "pha", 3))
+      else if (! strncasecmp(sTemp, "pha", 3))
         phaser_control();
-      else if (! strncmp(sTemp, "tor", 3))
+      else if (! strncasecmp(sTemp, "tor", 3))
         photon_torpedoes();
-      else if (! strncmp(sTemp, "she", 3))
+      else if (! strncasecmp(sTemp, "she", 3))
         sheild_control();
-      else if (! strncmp(sTemp, "dam", 3))
+      else if (! strncasecmp(sTemp, "dam", 3))
         damage_control();
-      else if (! strncmp(sTemp, "com", 3))
+      else if (! strncasecmp(sTemp, "com", 3))
         library_computer();
-      else if (! strncmp(sTemp, "xxx", 3))
+      else if (! strncasecmp(sTemp, "xxx", 3))
         resign_commision();
       else
     {
@@ -940,7 +936,7 @@ long_range_scan(void)
         if (i > 0 && i <= 8 && j > 0 && j <= 8)
           {
             z[i][j] = g[i][j];
-            printf(" %3.3d :", z[i][j]);
+            printf(" %03d :", z[i][j]);
           }
         else
           printf(" *** :");
@@ -1323,17 +1319,17 @@ library_computer(void)
   reads(sTemp);
   printf("\n");
 
-  if (! strncmp(sTemp, "0", 1))
+  if (! strncasecmp(sTemp, "0", 1))
     galactic_record();
-  else if (! strncmp(sTemp, "1", 1))
+  else if (! strncasecmp(sTemp, "1", 1))
     status_report();
-  else if (! strncmp(sTemp, "2", 1))
+  else if (! strncasecmp(sTemp, "2", 1))
     torpedo_data();
-  else if (! strncmp(sTemp, "3", 1))
+  else if (! strncasecmp(sTemp, "3", 1))
     nav_data();
-  else if (! strncmp(sTemp, "4", 1))
+  else if (! strncasecmp(sTemp, "4", 1))
     dirdist_calc();
-  else if (! strncmp(sTemp, "5", 1))
+  else if (! strncasecmp(sTemp, "5", 1))
     galaxy_map();
   else
     {
@@ -1368,7 +1364,7 @@ galactic_record(void)
       if (z[i][j] == 0)
         printf("***");
       else
-        printf("%3.3d", z[i][j]);
+        printf("%03d", z[i][j]);
     }
 
     printf("\n");
@@ -1658,7 +1654,7 @@ end_of_game(void)
       reads(sTemp);
       printf("\n");
 
-      if (! strncmp(sTemp, "aye", 3))
+      if (! strncasecmp(sTemp, "aye", 3))
         new_game();
     }
 
@@ -1859,7 +1855,7 @@ string_compare(void)
 
   mid_str(sB, sQ, s8, 3);
 
-  i = strncmp(sB, sA, 3);
+  i = strncasecmp(sB, sA, 3);
 
   if (i == 0)
     z3 = 1;
@@ -2054,7 +2050,7 @@ const unsigned char *instr[] = {
 "",
 "  Shows conditions in space for one quadrant on each side of",
 " the Enterprise (which is in the middle of the scan). The",
-" scan is coded in the form \###\ where the units digit is",
+" scan is coded in the form \\###\\ where the units digit is",
 " the number of stars, the tens digit is the number of",
 " starbases, and the hundreds digit is the number of Klingons.",
 "",
@@ -2073,7 +2069,7 @@ const unsigned char *instr[] = {
 " fire back at you. If you miss, you are subject to the phaser",
 " fire of all other Klingons in the quadrant.",
 "",
-"  The Library-Computer (\com\ command) has an option to",
+"  The Library-Computer (\\com\\ command) has an option to",
 " compute torpedo trajectory for you (option 2).",
 "",
 "\\she\\ Command = Shield Control",
@@ -2165,3 +2161,4 @@ rnd(void)
   
   return(d);
 }
+
